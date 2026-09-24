@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#007BA5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SE Mouv’ 1D">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>SE Mouv’ 1D — Mutations interdépartementales</title>
+</head>
+<body>
+<div id="seunsa-visualiseur">
+	<style>
+		#seunsa-visualiseur {
+			--bleu: #007BA5;
+			--orange: #EB6209;
+			--gris: #B2B2B2;
+			--bg: #ffffff;
+			--line: #e6e6e6;
+			--thead: #eef4f7;
+			--odd: #fdfaf3;
+			--rouge: #c0392b;
+			font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+			color: #111;
+		}
+
+		#seunsa-visualiseur .wrap {
+			max-width: 1200px;
+			margin: 0 auto;
+			display: grid;
+			gap: 16px
+		}
+
+		#seunsa-visualiseur .hero {
+			border: 1px solid var(--line);
+			border-radius: 14px;
+			background: linear-gradient(135deg, #fff 0%, #fff 40%, #f7fbff 40%, #fff 100%);
+			padding: 18px 18px 14px;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, .06)
+		}
+
+		#seunsa-visualiseur .hero h1 {
+			margin: 0 0 6px;
+			font-size: 1.4rem;
+			line-height: 1.2
+		}
+
+		#seunsa-visualiseur .hero p {
+			margin: .3rem 0;
+		}
+
+		#seunsa-visualiseur .badges {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+			margin-top: 8px
+		}
+
+		#seunsa-visualiseur .badge {
+			display: inline-block;
+			background: var(--orange);
+			color: #fff;
+			border-radius: 999px;
+			padding: 4px 10px;
+			font-size: .8rem;
+			font-weight: 800
+		}
+
+		#seunsa-visualiseur .badge.blue {
+			background: var(--bleu)
+		}
+
+		#seunsa-visualiseur .small {
+			color: #444;
+			font-size: .92rem
+		}
+
+		#seunsa-visualiseur .panel {
+			border: 1px solid var(--line);
+			border-radius: 14px;
+			background: var(--bg);
+			box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+			padding: 16px
+		}
+
+		#seunsa-visualiseur label {
+			font-weight: 700;
+			margin-bottom: 6px;
+			display: block
+		}
+
+		#seunsa-visualiseur input[type="text"] {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #d6d6d6;
+			border-radius: 10px;
+			background: #fff
+		}
+
+		#seunsa-visualiseur .hint {
+			font-size: .92rem;
+			color: #555
+		}
+
+		#seunsa-visualiseur .actions {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			margin-top: 10px
+		}
+
+		#seunsa-visualiseur .btn {
+			border: 1px solid transparent;
+			border-radius: 999px;
+			padding: 10px 14px;
+			cursor: pointer;
+			font-weight: 700
+		}
+
+		#seunsa-visualiseur .btn-primary {
+			background: var(--bleu);
+			color: #fff
+		}
+
+		#seunsa-visualiseur .btn-secondary {
+			background: #f2f3f5
+		}
+
+		#seunsa-visualiseur .block {
+			border: 1px solid var(--line);
+			border-radius: 14px;
+			background: var(--bg)
+		}
+
+		#seunsa-visualiseur .title {
+			color: #fff;
+			padding: 12px 16px;
+			font-weight: 800;
+			letter-spacing: .2px
+		}
+
+		#seunsa-visualiseur .title.origin {
+			background: var(--bleu)
+		}
+
+		#seunsa-visualiseur .title.targets {
+			background: var(--orange)
+		}
+
+		#seunsa-visualiseur .scroll-x {
+			overflow: auto;
+			-webkit-overflow-scrolling: touch
+		}
+
+		#seunsa-visualiseur table {
+			width: 100%;
+			border-collapse: collapse;
+			min-width: 1080px
+		}
+
+		#seunsa-visualiseur th,
+		#seunsa-visualiseur td {
+			border: 1px solid var(--line);
+			padding: 9px 10px;
+			font-size: .95rem;
+			white-space: nowrap;
+			background: #fff
+		}
+
+		#seunsa-visualiseur thead th {
+			background: var(--thead);
+			font-weight: 800;
+			text-align: center;
+			position: sticky;
+			top: 0;
+			z-index: 1
+		}
+
+		#seunsa-visualiseur tbody tr:nth-child(odd) td {
+			background: var(--odd)
+		}
+
+		#seunsa-visualiseur .rowlabel {
+			font-weight: 800;
+			white-space: nowrap
+		}
+
+		#seunsa-visualiseur tbody tr:hover td {
+			background: #fff8ea
+		}
+
+		#seunsa-visualiseur .sl {
+			width: 150px;
+			min-width: 150px;
+			text-align: center
+		}
+
+		#seunsa-visualiseur tr.row-bold td:not(:first-child) {
+			font-weight: 800
+		}
+
+		#seunsa-visualiseur tr.row-red td:not(:first-child) {
+			color: var(--rouge);
+			font-weight: 800
+		}
+
+		#seunsa-visualiseur tr.row-satisf-origin td:not(:first-child) {
+			color: var(--orange);
+			font-weight: 800
+		}
+
+		#seunsa-visualiseur tr.row-satisf-target td:not(:first-child) {
+			color: var(--bleu);
+			font-weight: 800
+		}
+
+		#seunsa-visualiseur .grid-targets {
+			display: grid;
+			gap: 12px
+		}
+
+		#seunsa-visualiseur .subheader {
+			border-top: 2px solid rgba(235, 98, 9, .35);
+			padding: 10px 12px;
+			font-weight: 900;
+			color: #7a1f1c;
+			background: #fff
+		}
+
+		#seunsa-visualiseur .trend {
+			font-weight: 900;
+			margin-left: 4px
+		}
+
+		#seunsa-visualiseur .up {
+			color: var(--orange)
+		}
+
+		#seunsa-visualiseur .down {
+			color: var(--bleu)
+		}
+
+		#seunsa-visualiseur .flat {
+			color: #666
+		}
+
+		#seunsa-visualiseur .contacts {
+			border: 1px solid var(--line);
+			border-radius: 14px;
+			background: #fff;
+			padding: 16px
+		}
+
+		#seunsa-visualiseur .contacts h3 {
+			margin: .2rem 0 6px
+		}
+
+		#seunsa-visualiseur a {
+			color: var(--bleu);
+			text-decoration: none
+		}
+
+		#seunsa-visualiseur a:hover {
+			text-decoration: underline
+		}
+
+		/* En-tête de ligne fixe pendant le défilement horizontal */
+		#seunsa-visualiseur thead th:first-child,
+		#seunsa-visualiseur tbody td:first-child {
+			position: sticky;
+			left: 0;
+			z-index: 3;
+			box-shadow: 2px 0 0 rgba(0,0,0,.06);
+		}
+
+		#seunsa-visualiseur thead th:first-child {
+			z-index: 5;
+			background: var(--thead);
+		}
+
+		#seunsa-visualiseur tbody tr:nth-child(odd) td:first-child {
+			background: var(--odd);
+		}
+
+		#seunsa-visualiseur tbody tr:nth-child(even) td:first-child {
+			background: #fff;
+		}
+
+		#seunsa-visualiseur tbody tr:hover td:first-child {
+			background: #fff8ea;
+		}
+
+	</style>
+
+	<div class="wrap">
+		<section class="hero">
+			<h1>Visualiseur des mouvements interdépartementaux 1<sup>er</sup> degré — SE-Unsa 71</h1>
+			<p class="small">
+				Un outil simple pour <strong>comparer, analyser et comprendre</strong> l’évolution des barèmes, flux
+				(entrants/sortants), candidatures et <strong>taux de satisfaction</strong> sur les années
+				<strong>2020 → 2026</strong>.
+			</p>
+			<p class="small">
+				<strong>Important :</strong> ce visualiseur reprend l’<strong>historique</strong> des données. Il
+				<strong>n’anticipe pas</strong> les résultats à venir ; il sert à
+				<strong>comprendre comment cela s’est passé</strong> les années précédentes — pas à prédire ce qui va se
+				passer.
+			</p>
+			<div class="badges">
+				<span class="badge">Créé par le SE-Unsa 71</span>
+				<span class="badge blue">Réservé aux adhérents</span>
+			</div>
+		</section>
+
+		<div class="panel">
+			<div style="display:grid;gap:12px">
+				<div>
+					<label for="search-origin">Département d’origine (recherche par n° ou nom)</label>
+					<input id="search-origin" type="text" list="dep-list" placeholder="ex. 33 — Gironde (33)" />
+					<div class="hint">Tape quelques lettres ou un numéro. Suggestions automatiques.</div>
+				</div>
+				<div>
+					<label>Départements visés (jusqu’à 6 recherches rapides)</label>
+					<div style="display:grid;gap:10px;grid-template-columns:repeat(2,1fr)">
+						<input class="search-target" type="text" list="dep-list" placeholder="Cible 1">
+						<input class="search-target" type="text" list="dep-list" placeholder="Cible 2">
+						<input class="search-target" type="text" list="dep-list" placeholder="Cible 3">
+						<input class="search-target" type="text" list="dep-list" placeholder="Cible 4">
+						<input class="search-target" type="text" list="dep-list" placeholder="Cible 5">
+						<input class="search-target" type="text" list="dep-list" placeholder="Cible 6">
+          </div>
+						<div class="hint">Vous pouvez laisser des cases vides.
+							<span id="seu-count" class="badge">0/6</span></div>
+					</div>
+				</div>
+
+				<div class="actions">
+					<button class="btn btn-primary" id="seu-show">Afficher</button>
+					<button class="btn btn-secondary" id="seu-reset">Réinitialiser</button>
+					<button class="btn btn-primary" id="seu-export-pdf">📄 Exporter en PDF</button>
+				</div>
+
+				<datalist id="dep-list"></datalist>
+			</div>
+
+			<div class="block" id="seu-origin-block" style="display:none">
+				<div class="title origin" id="seu-origin-title">Informations sur le département d’origine</div>
+				<div class="scroll-x">
+					<table id="seu-origin-table"></table>
+				</div>
+			</div>
+
+			<div class="block" id="seu-targets-block" style="display:none">
+				<div class="title targets">Informations sur les départements visés</div>
+				<div id="seu-targets-container" class="grid-targets"></div>
+			</div>
+
+			<div class="contacts">
+				<h3>📍 Cet outil est un service d’accompagnement proposé par le SE-Unsa 71.</h3>
+				<p>Pour toute demande d’explication ou de conseil individuel :</p>
+				<p><strong>Maud PETIT</strong><br> ✉️ <a href="mailto:71@se-unsa.org">71@se-unsa.org</a><br> ☎️ <a
+						href="tel:+33781891048">07&nbsp;81&nbsp;89&nbsp;10&nbsp;48</a></p>
+				<p><strong>Guillaume – SE-Unsa 71</strong><br> ✉️ <a
+						href="mailto:entree_metier.71@se-unsa.org">entree_metier.71@se-unsa.org</a><br> ☎️ <a
+						href="tel:+33769652423">07&nbsp;69&nbsp;65&nbsp;24&nbsp;23</a></p>
+			</div>
+		</div>
+
+		<script id="csv-data" type="text/plain">
+Département	Barème 2020 du dernier entrant (phase de mutation)	Barème 2021 du dernier entrant (phase de mutation)	Barème 2022 du dernier entrant (phase de mutation	Barème 2023 du dernier entrant (phase de mutation	Barème 2024 du dernier entrant (phase de mutation	Barème 2025 du dernier entrant (phase de mutation	Barème 2026 du dernier entrant (phase de mutation	Barème 2020 du dernier sortant (phase de mutation)	Barème 2021 du dernier sortant (phase de mutation)	Barème 2022 du dernier sortant (phase de mutation)	Barème 2023 du dernier sortant (phase de mutation)	Barème 2024 du dernier sortant (phase de mutation)	Barème 2025 du dernier sortant (phase de mutation)	Barème 2026 du dernier sortant (phase de mutation)	Nombre d'entrants 2020 (phases de mutation et de permutations)	Nombre d'entrants 2021 (phases de mutation et de permutations)	Nombre d'entrants 2022 (phases de mutation et de permutations)	Nombre d'entrants 2023 (phases de mutation et de permutations)	Nombre d'entrants 2024 (phases de mutation et de permutations)	Nombre d'entrants 2025 (phases de mutation et de permutations)	Nombre d'entrants 2026 (phases de mutation et de permutations)	Nombre de sortants 2020 (phases de mutation et de permutations)	Nombre de sortants 2021 (phases de mutation et de permutations)	Nombre de sortants 2022 (phases de mutation et de permutations)	Nombre de sortants 2023 (phases de mutation et de permutations)	Nombre de sortants 2024 (phases de mutation et de permutations)	Nombre de sortants 2025 (phases de mutation et de permutations)	Nombre de sortants 2026 (phases de mutation et de permutations)	Nombre de candidats 2020 à l'entrée	Nombre de candidats 2021 à l'entrée	Nombre de candidats 2022 à l'entrée	Nombre de candidats 2023 à l'entrée	Nombre de candidats 2024 à l'entrée	Nombre de candidats 2025 à l'entrée	Nombre de candidats 2026 à l'entrée	Nombre de candidats 2020 à la sortie	Nombre de candidats 2021 à la sortie	Nombre de candidats 2022 à la sortie	Nombre de candidats 2023 à la sortie	Nombre de candidats 2024 à la sortie	Nombre de candidats 2025 à la sortie	Nombre de candidats 2026 à la sortie	Taux de satisfaction 2020 à l'entrée	Taux de satisfaction 2021 à l'entrée	Taux de satisfaction 2022 à l'entrée	Taux de satisfaction 2023 à l'entrée	Taux de satisfaction 2024 à l'entrée	Taux de satisfaction 2025 à l'entrée	Taux de satisfaction 2026 à l'entrée	Taux de satisfaction 2020 à la sortie	Taux de satisfaction 2021 à la sortie	Taux de satisfaction 2022 à la sortie	Taux de satisfaction 2023 à la sortie	Taux de satisfaction 2024 à la sortie	Taux de satisfaction 2025 à la sortie	Taux de satisfaction 2026 à la sortie
+01 AIN	22	22	22	22	22	22	22	427	272	123	222	222	67	42	38	44	53	46	37	52	42	56	50	62	57	60	72	60	131	190	200	177	154	140	112	267	253	227	207	197	203	174	29.01%	23.16%	26.50%	25.99%	24.03%	37.14%	37.50%	20.97%	19.76%	27.31%	27.54%	30.46%	35.47%	34.48%
+02 AISNE	42	33	102.83	22	582	0	-	325	233	81	30	22	22	22	15	18	14	19	10	6	12	26	24	25	24	42	21	24	56	76	83	92	94	63	77	123	122	132	113	97	85	75	26.79%	23.68%	16.87%	20.65%	10.64%	9.52%	15.58%	21.14%	19.67%	18.94%	21.24%	43.30%	24.71%	32.00%
+03 ALLIER	22	39	22	22	22	22	24	798	29	63	142	739	582	22	22	29	29	27	21	38	26	13	24	23	21	12	23	16	104	135	140	142	143	114	74	179	163	153	127	108	92	91	21.15%	21.48%	20.71%	19.01%	14.69%	33.33%	35.14%	7.26%	14.72%	15.03%	16.54%	11.11%	25.00%	17.58%
+04 ALPES-DE-HTE-PROVENCE	511	517.67	439	262	22	39	84	22	28	22	398	22	22	22	11	24	19	30	24	26	19	9	13	10	15	16	14	9	257	269	240	217	202	188	150	34	36	32	43	38	34	34	4.28%	8.92%	7.92%	13.82%	11.88%	13.83%	12.67%	26.47%	36.11%	31.25%	34.88%	42.11%	41.18%	26.47%
+05 HAUTES-ALPES	1268	749	710	665	446.5	341	498	313	243	91	128	81	22	153	3	7	10	12	21	17	11	3	5	4	4	10	5	4	230	264	266	243	205	170	156	3	5	5	6	11	7	6	1.30%	2.65%	3.76%	4.94%	10.24%	10.00%	7.05%	100.00%	100.00%	80.00%	66.67%	90.91%	71.43%	66.67%
+06 ALPES-MARITIMES	22	72	41	22	22	22	22	90	22	22	88.5	1094	0	-	60	54	74	66	60	46	45	35	35	43	35	23	8	11	450	498	536	478	421	326	266	117	126	165	159	148	162	156	13.33%	10.84%	13.81%	13.81%	14.25%	14.11%	16.92%	29.91%	27.78%	26.06%	22.01%	15.54%	4.94%	7.05%
+07 ARDECHE	424.67	532	465	488	835	444	529	22	33	40	28	30	679	127	18	16	31	24	7	22	13	15	14	22	15	7	11	12	276	323	328	264	223	198	171	30	26	34	28	19	17	19	6.52%	4.95%	9.45%	9.09%	3.14%	11.11%	7.60%	50.00%	53.85%	64.71%	53.57%	36.84%	64.71%	63.16%
+08 ARDENNES	22	22	39	39	22	302	-	272	141	22	26	22	222	22	10	9	11	11	9	11	6	18	18	13	14	13	11	12	27	29	37	39	33	37	26	53	41	44	35	26	21	18	37.04%	31.03%	29.73%	28.21%	27.27%	29.73%	23.08%	33.96%	43.90%	29.55%	40.00%	50.00%	52.38%	66.67%
+09 ARIEGE	452	509	685	377	68.5	122	239	22	441	899	222	22	22	22	12	9	8	14	15	15	13	11	9	4	9	8	9	8	203	210	198	194	160	147	129	16	12	9	11	11	16	13	5.91%	4.29%	4.04%	7.22%	9.38%	10.20%	10.08%	68.75%	75.00%	44.44%	81.82%	72.73%	56.25%	61.54%
+10 AUBE	32	22	227	471.17	22	497	686	39	22	22	22	37	194.67	22	12	12	13	12	18	9	9	22	10	13	13	17	9	16	60	60	96	80	75	64	40	47	31	27	20	28	22	27	20.00%	20.00%	13.54%	15.00%	24.00%	14.06%	22.50%	46.81%	32.26%	48.15%	65.00%	60.71%	40.91%	59.26%
+11 AUDE	44.5	272	417	475	148	351	183	22	22	243	37	44	427	137	48	39	34	38	38	28	31	35	27	26	28	28	20	24	459	526	552	452	371	362	280	101	71	63	69	59	37	36	10.46%	7.41%	6.16%	8.41%	10.24%	7.73%	11.07%	34.65%	38.03%	41.27%	40.58%	47.46%	54.05%	66.67%
+12 AVEYRON	291	507	901	639	532	500	499	66.67	272	384	67	432	222	-	14	12	11	11	11	15	11	13	11	11	9	5	7	3	225	243	219	223	182	154	147	20	16	16	11	6	7	3	6.22%	4.94%	5.02%	4.93%	6.04%	9.74%	7.48%	65.00%	68.75%	68.75%	81.82%	83.33%	100.00%	100.00%
+13 BOUCHES-DU-RHONE	22	22	22	22	22	22	22	421	99.5	22	377	532	443	383	118	132	132	122	108	114	107	78	77	90	93	90	86	74	673	743	784	722	600	509	434	421	403	513	478	495	423	351	17.53%	17.77%	16.84%	16.90%	18.00%	22.40%	24.65%	18.53%	19.11%	17.54%	19.46%	18.18%	20.33%	21.08%
+14 CALVADOS	805	866.33	878	907	799	815	868	28	22	35	148	22	22	22	26	20	25	16	30	20	17	24	17	19	13	19	13	11	453	490	478	520	502	453	421	38	28	29	23	26	21	17	5.74%	4.08%	5.23%	3.08%	5.98%	4.42%	4.04%	63.16%	60.71%	65.52%	56.52%	73.08%	61.90%	64.71%
+15 CANTAL	86.33	584	681	822	379	662	969	36	65	564	684	59	99.33	850	7	8	17	10	7	6	7	10	8	14	8	7	8	7	109	137	113	106	96	81	73	31	23	28	20	14	20	14	6.42%	5.84%	15.04%	9.43%	7.29%	7.41%	9.59%	32.26%	34.78%	50.00%	40.00%	50.00%	40.00%	50.00%
+16 CHARENTE	427	464	554	572	329	524	333	39	28	22	35	26	320	33	18	21	24	16	19	13	15	23	17	19	14	14	12	13	251	242	263	234	205	173	143	68	63	58	50	46	42	50	7.17%	8.68%	9.13%	6.84%	9.27%	7.51%	10.49%	33.82%	26.98%	32.76%	28.00%	30.43%	28.57%	26.00%
+17 CHARENTE-MARITIME	743	859	787	779	918	884	865	22	81	22	169	36	302	48	34	27	32	23	25	26	21	29	22	22	18	16	17	12	912	972	939	875	794	700	570	35	41	37	33	29	29	21	3.73%	2.78%	3.41%	2.63%	3.15%	3.71%	3.68%	82.86%	53.66%	59.46%	54.55%	55.17%	58.62%	57.14%
+18 CHER	42	30.41	39	30	22	22	64	656	331	302	203	557	40	22	16	18	14	14	14	16	13	11	17	13	14	15	25	13	82	92	91	101	85	62	67	105	106	91	87	78	85	58	19.51%	19.57%	15.38%	13.86%	16.47%	25.81%	19.40%	10.48%	16.04%	14.29%	16.09%	19.23%	29.41%	22.41%
+19 CORREZE	22	822	738	839	385.33	317	507	31	83	0	29	33	39	32	22	14	18	17	13	17	13	15	11	13	15	10	13	9	154	219	190	165	141	123	106	35	29	31	29	21	20	15	14.29%	6.39%	9.47%	10.30%	9.22%	13.82%	12.26%	42.86%	37.93%	41.94%	51.72%	47.62%	65.00%	60.00%
+21 COTE D'OR	603	481	532	395	234	222	280	22	22	22	24	22	22	22	31	36	36	30	33	36	30	21	21	27	20	22	20	18	248	241	237	226	188	173	158	37	39	44	38	36	39	31	12.50%	14.94%	15.19%	13.27%	17.55%	20.81%	18.99%	56.76%	53.85%	61.36%	52.63%	61.11%	51.28%	58.06%
+22 COTES D'ARMOR	791	947	859	970	1373	823	721	167	29	365	1189	81	135	250	31	18	25	19	8	19	33	20	15	20	14	8	15	20	774	894	926	871	821	755	665	84	71	85	79	66	77	65	4.01%	2.01%	2.70%	2.18%	0.97%	2.52%	4.96%	23.81%	21.13%	23.53%	17.72%	12.12%	19.48%	30.77%
+23 CREUSE	41	137	352	444	22	22	22	652	633	54.83	705	531	607	532	6	6	16	9	11	11	10	9	6	14	7	7	9	9	87	100	94	94	68	66	51	39	40	35	25	31	39	41	6.90%	6.00%	17.02%	9.57%	16.18%	16.67%	19.61%	23.08%	15.00%	40.00%	28.00%	22.58%	23.08%	21.95%
+24 DORDOGNE	28	418	447	544.5	519	302	489	22	33	70	68	22	222	108	41	33	39	33	24	24	21	27	31	29	23	14	14	18	369	528	438	377	315	267	214	72	68	57	38	35	25	42	11.11%	6.25%	8.90%	8.75%	7.62%	8.99%	9.81%	37.50%	45.59%	50.88%	60.53%	40.00%	56.00%	42.86%
+25 DOUBS	28	620	572	445	351	385	371	37	33	22	22	22	85	60	24	21	23	27	22	23	24	25	19	24	27	18	23	24	123	148	122	113	94	89	82	38	36	46	49	42	34	34	19.51%	14.19%	18.85%	23.89%	23.40%	25.84%	29.27%	65.79%	52.78%	52.17%	55.10%	42.86%	67.65%	70.59%
+26 DROME	384	411	530	553	516	552	901	22	22	35	30	22	39	90	46	35	39	41	30	31	17	26	20	32	29	21	22	16	394	461	513	403	336	298	246	36	33	45	46	33	25	19	11.68%	7.59%	7.60%	10.17%	8.93%	10.40%	6.91%	72.22%	60.61%	71.11%	63.04%	63.64%	88.00%	84.21%
+27 EURE	22	22	22	22	22	30	33	829	632	294	22	517	222	79	37	31	49	39	42	43	43	30	33	61	39	40	37	41	145	178	226	208	204	170	144	244	254	240	212	214	211	163	25.52%	17.42%	21.68%	18.75%	20.59%	25.29%	29.86%	12.30%	12.99%	25.42%	18.40%	18.69%	17.54%	25.15%
+28 EURE-ET-LOIR	22	26	22	22	22	24	22	589	352	391	459	524	410	344	22	29	33	30	23	25	19	29	29	30	29	27	29	22	106	166	197	171	141	137	123	209	209	217	234	236	204	150	20.75%	17.47%	16.75%	17.54%	16.31%	18.25%	15.45%	13.88%	13.88%	13.82%	12.39%	11.44%	14.22%	14.67%
+29 FINISTERE	958	1063	910	1189	1515	958	912	22	22	0	22	302	172	110	25	18	16	9	14	26	27	20	10	5	6	13	14	16	916	1052	1084	1054	1006	925	777	20	10	5	6	13	14	16	2.73%	1.71%	1.48%	0.85%	1.39%	2.81%	3.47%	100.00%	100.00%	100.00%	100.00%	100.00%	100.00%	100.00%
+30 GARD	228	184.5	370	388	99	308	119	22	41	29	35	39	22	22	77	75	52	60	60	48	64	66	55	43	44	44	33	44	578	619	669	606	506	417	351	146	131	117	122	120	109	127	13.32%	12.12%	7.77%	9.90%	11.86%	11.51%	18.23%	45.21%	41.98%	36.75%	36.07%	36.67%	30.28%	34.65%
+31 HAUTE-GARONNE	102	170	108	126	22	134	52	33	22	22	22	24	22	22	139	122	133	111	106	100	104	54	58	58	58	43	49	54	804	737	755	700	619	567	430	130	145	164	183	153	157	174	17.29%	16.55%	17.62%	15.86%	17.12%	17.64%	24.19%	41.54%	40.00%	35.37%	31.69%	28.10%	31.21%	31.03%
+32 GERS	456	472	222	80	101	222	237	45	326	85.67	22	22	26	56	18	21	24	22	16	24	17	18	13	19	17	12	20	12	220	216	213	224	230	191	138	56	48	46	50	42	51	55	8.18%	9.72%	11.27%	9.82%	6.96%	12.57%	12.32%	32.14%	27.08%	41.30%	34.00%	28.57%	39.22%	21.82%
+33 GIRONDE	149	367	377	456	82	85	375	33	29	22	22	22	22	22	165	120	110	99	117	137	72	58	72	63	52	56	69	56	1280	1321	1233	1164	997	900	725	242	307	297	301	293	284	284	12.89%	9.08%	8.92%	8.51%	11.74%	15.22%	9.93%	23.97%	23.45%	21.21%	17.28%	19.11%	24.30%	19.72%
+34 HERAULT	482	413	568	528	488	642	740	22	22	24	35	22	22	22	88	88	75	74	62	58	57	51	48	51	43	43	40	43	1043	1050	1092	1013	883	800	651	69	78	81	74	78	73	52	8.44%	8.38%	6.87%	7.31%	7.02%	7.25%	8.76%	73.91%	61.54%	62.96%	58.11%	55.13%	54.79%	82.69%
+35 ILLE-ET-VILAINE	689	739	881	767	869	785	807	22	22	129	31	22	111.83	379	48	51	36	52	20	39	44	33	31	24	32	17	24	28	1016	1133	1096	1110	996	872	753	140	137	149	167	121	133	132	4.72%	4.50%	3.28%	4.68%	2.01%	4.47%	5.84%	23.57%	22.63%	16.11%	19.16%	14.05%	18.05%	21.21%
+36 INDRE	101	107	655.83	740	86	122	372	22	187	503	302	372	22	26	10	7	11	2	15	13	10	14	6	8	3	8	10	9	89	103	111	98	83	77	67	30	24	24	34	34	30	34	11.24%	6.80%	9.91%	2.04%	18.07%	16.88%	14.93%	46.67%	25.00%	33.33%	8.82%	23.53%	33.33%	26.47%
+37 INDRE-ET-LOIRE	641	743	759	733	704	712	832	22	30.41	33	30	22	22	22	37	29	30	30	33	34	21	25	21	26	22	23	23	20	411	434	438	418	356	301	267	54	63	84	72	72	73	66	9.00%	6.68%	6.85%	7.18%	9.27%	11.30%	7.87%	46.30%	33.33%	30.95%	30.56%	31.94%	31.51%	30.30%
+38 ISERE	22	322	381	322	300	272	282	327	22	22	22	22	24	22	99	91	70	97	64	70	66	63	69	50	74	52	52	44	403	483	447	405	338	317	248	163	183	182	193	168	156	156	24.57%	18.84%	15.66%	23.95%	18.93%	22.08%	26.61%	38.65%	37.70%	27.47%	38.34%	30.95%	33.33%	28.21%
+39 JURA	22	494	691	466	342	361	387	222	84	30	39	22	0	105	18	10	10	14	11	13	7	5	9	10	14	9	8	5	127	151	133	119	93	89	65	16	16	20	16	13	11	10	14.17%	6.62%	7.52%	11.76%	11.83%	14.61%	10.77%	31.25%	56.25%	50.00%	87.50%	69.23%	72.73%	50.00%
+40 LANDES	818.33	860	761	757	739	672	878	22	142	87	241	53	152.33	139	19	18	19	22	23	33	10	10	11	11	14	13	21	6	768	861	836	768	693	652	577	118	138	133	116	104	96	72	2.47%	2.09%	2.27%	2.86%	3.32%	5.06%	1.73%	8.47%	7.97%	8.27%	12.07%	12.50%	21.88%	8.33%
+41 LOIR-ET-CHER	22	372	443	477	205	354.67	509	552	85	22	24	22	22	22	25	22	15	26	19	21	14	21	19	15	25	23	21	13	149	197	181	171	150	138	108	108	92	105	109	89	79	68	16.78%	11.17%	8.29%	15.20%	12.67%	15.22%	12.96%	19.44%	20.65%	14.29%	22.94%	25.84%	26.58%	19.12%
+42 LOIRE	594	689	754.83	850	786	853	1133	26	22	22	24	22	160	272	38	31	24	15	18	16	12	17	25	21	13	15	12	10	325	325	318	286	278	302	313	51	56	56	53	50	42	35	11.69%	9.54%	7.55%	5.24%	6.47%	5.30%	3.83%	33.33%	44.64%	37.50%	24.53%	30.00%	28.57%	28.57%
+43 HAUTE-LOIRE	819	862	879	1022	806	1022	1579	40.17	142	0	0	61	35	822	5	7	5	6	7	4	5	9	8	4	3	4	4	5	152	158	153	143	138	134	122	12	8	5	3	4	4	7	3.29%	4.43%	3.27%	4.20%	5.07%	2.99%	4.10%	75.00%	100.00%	80.00%	100.00%	100.00%	100.00%	71.43%
+44 LOIRE-ATLANTIQUE	522.83	488	405	302	171	222	552	33	33	33	36	22	39	49	90	120	108	108	110	111	54	40	44	43	42	31	36	44	1307	1339	1284	1119	981	857	684	99	104	144	149	143	139	119	6.89%	8.96%	8.41%	9.65%	11.21%	12.95%	7.89%	40.40%	42.31%	29.86%	28.19%	21.68%	25.90%	36.97%
+45 LOIRET	35	22	22	22	26	22	22	744	511	521	419	431	154	29	48	38	43	43	34	34	28	41	37	37	38	37	35	27	127	169	201	197	179	142	120	255	241	234	205	188	171	149	37.80%	22.49%	21.39%	21.83%	18.99%	23.94%	23.33%	16.08%	15.35%	15.81%	18.54%	19.68%	20.47%	18.12%
+46 LOT	115	367	727	843	432	439	392	35	72	0	222	22	108	48	16	15	15	13	8	10	9	11	13	12	11	4	7	6	186	233	206	176	161	141	122	22	18	15	14	7	10	9	8.60%	6.44%	7.28%	7.39%	4.97%	7.09%	7.38%	50.00%	72.22%	80.00%	78.57%	57.14%	70.00%	66.67%
+47 LOT-ET-GARONNE	22	119	67	302	22	99	75	912	286	35	106	222	92	45	22	27	35	30	22	28	23	9	22	25	20	16	20	17	255	327	309	333	236	227	167	131	145	144	139	117	101	95	8.63%	8.26%	11.33%	9.01%	9.32%	12.33%	13.77%	6.87%	15.17%	17.36%	14.39%	13.68%	19.80%	17.89%
+48 LOZERE	505.67	399	274	865	0	330	222	107	422	128	22	22	145	24	5	5	9	5	3	8	5	5	5	9	6	4	8	5	99	111	111	115	83	71	59	13	7	11	12	13	14	12	5.05%	4.50%	8.11%	4.35%	3.61%	11.27%	8.47%	38.46%	71.43%	81.82%	50.00%	30.77%	57.14%	41.67%
+49 MAINE-ET-LOIRE	316.67	518	566	522	499	372	885	22	33	90	24	22	28	416	68	37	50	52	31	48	18	21	32	39	35	14	25	16	495	524	506	488	439	405	325	53	69	70	49	32	39	33	13.74%	7.06%	9.88%	10.66%	7.06%	11.85%	5.54%	39.62%	46.38%	55.71%	71.43%	43.75%	64.10%	48.48%
+50 MANCHE	1022	887	868	1499	906	747	905	33	35	35	1080	22	42	22	18	14	20	14	20	16	8	18	13	20	14	18	9	8	275	328	337	331	302	272	233	56	53	50	48	53	42	40	6.55%	4.27%	5.93%	4.23%	6.62%	5.88%	3.43%	32.14%	24.53%	40.00%	29.17%	33.96%	21.43%	20.00%
+51 MARNE	22	22	346	222	68	422	-	62	22	22	22	22	30	22	30	28	18	28	31	18	14	36	26	18	28	32	18	21	118	110	127	104	125	93	71	73	64	48	64	49	46	37	25.42%	25.45%	14.17%	26.92%	24.80%	19.35%	19.72%	49.32%	40.62%	37.50%	43.75%	65.31%	39.13%	56.76%
+52 HAUTE-MARNE	22	39	26	58	76	0	-	32	67	322	24	272	628	22	11	8	5	10	9	4	4	25	9	8	13	11	7	7	38	33	33	34	33	25	28	40	29	51	40	33	29	21	28.95%	24.24%	15.15%	29.41%	27.27%	16.00%	14.29%	62.50%	31.03%	15.69%	32.50%	33.33%	24.14%	33.33%
+53 MAYENNE	-	-	0	1202	0	0	-	22	41	101	22	274	105	122	5	7	9	10	5	7	6	10	11	11	15	9	11	9	172	197	190	162	146	132	130	51	50	53	49	44	42	34	2.91%	3.55%	4.74%	6.17%	3.42%	5.30%	4.62%	19.61%	22.00%	20.75%	30.61%	20.45%	26.19%	26.47%
+54 MEURTHE-ET-MOSELLE	464	33	22	22	22	822	404	22	22	24	22	76	29	22	18	39	35	32	28	33	21	32	34	31	30	35	41	31	134	138	127	116	121	113	90	50	59	68	71	74	72	67	13.43%	28.26%	27.56%	27.59%	23.14%	29.20%	23.33%	64.00%	57.63%	45.59%	42.25%	47.30%	56.94%	46.27%
+55 MEUSE	292	22	22	22	222	222	22	484	392	388	536	387	29	79	7	9	7	4	5	7	3	10	12	10	8	13	17	14	33	37	34	30	39	25	16	46	42	25	38	45	42	33	21.21%	24.32%	20.59%	13.33%	12.82%	28.00%	18.75%	21.74%	28.57%	40.00%	21.05%	28.89%	40.48%	42.42%
+56 MORBIHAN	976	879.67	938	1163	1303	929	877	26	124	716	37	24	59	49	20	19	17	15	19	21	25	17	16	11	10	13	9	17	1210	1292	1412	1301	1217	1074	938	41	37	33	38	34	24	32	1.65%	1.47%	1.20%	1.15%	1.56%	1.96%	2.67%	41.46%	43.24%	33.33%	26.32%	38.24%	37.50%	53.12%
+57 MOSELLE	22	28	30	22	22	402	79	22	22	22	22	128	28	22	32	30	37	31	31	36	20	34	37	45	29	26	36	20	111	138	147	121	113	100	62	84	82	84	85	69	73	70	28.83%	21.74%	25.17%	25.62%	27.43%	36.00%	32.26%	40.48%	45.12%	53.57%	34.12%	37.68%	49.32%	28.57%
+58 NIEVRE	210	88	22	24	41	483	222	382	444	363	222	234	22	22	7	5	7	14	6	4	3	16	11	15	21	15	17	12	47	41	52	60	48	46	38	63	82	76	78	49	38	23	14.89%	12.20%	13.46%	23.33%	12.50%	8.70%	7.89%	25.40%	13.41%	19.74%	26.92%	30.61%	44.74%	52.17%
+59 NORD	22	22	22	22	22	85	193	150	87	26	22	22	22	45	80	77	69	74	55	66	49	90	80	82	86	67	72	61	227	233	227	246	211	193	163	237	232	271	253	255	234	197	35.24%	33.05%	30.40%	30.08%	26.07%	34.20%	30.06%	37.97%	34.48%	30.26%	33.99%	26.27%	30.77%	30.96%
+60 OISE	22	22	22	22	28	537	1329	581	290	376	90	128	22	22	32	30	19	35	37	30	11	42	44	32	49	49	45	34	143	165	189	210	223	64	154	371	364	329	297	300	291	257	22.38%	18.18%	10.05%	16.67%	16.59%	46.88%	7.14%	11.32%	12.09%	9.73%	16.50%	16.33%	15.46%	13.23%
+61 ORNE	-	707.83	766.67	803	222	22	408	22	22	45	59	811	22	222	1	14	15	14	12	13	10	13	14	18	17	16	16	11	114	139	129	116	91	99	106	152	156	135	150	144	132	125	0.88%	10.07%	11.63%	12.07%	13.19%	13.13%	9.43%	8.55%	8.97%	13.33%	11.33%	11.11%	12.12%	8.80%
+62 PAS-DE-CALAIS	222	238	299	419	622	834	829	22	22	22	22	30	22	22	31	43	39	30	21	20	33	60	43	54	41	33	26	36	183	190	191	217	242	231	184	95	92	106	81	62	52	57	16.94%	22.63%	20.42%	13.82%	8.68%	8.66%	17.93%	63.16%	46.74%	50.94%	50.62%	53.23%	50.00%	63.16%
+63 PUY-DE-DOME	457	793	788	771	384	582	595	22	28	41	247	22	22	100.5	38	22	27	30	34	39	25	16	14	18	20	9	17	15	392	400	363	328	308	261	222	18	20	26	22	17	24	26	9.69%	5.50%	7.44%	9.15%	11.04%	14.94%	11.26%	88.89%	70.00%	69.23%	90.91%	52.94%	70.83%	57.69%
+64 PYRENEES-ATLANTIQUES	1332	847	823	821	796	785.33	1407	63	379	0	39	133	731.33	159	13	20	23	29	32	26	6	14	12	4	10	10	6	4	995	1076	1050	968	901	878	750	16	14	7	10	10	8	6	1.31%	1.86%	2.19%	3.00%	3.55%	2.96%	0.80%	87.50%	85.71%	57.14%	100.00%	100.00%	75.00%	66.67%
+65 HAUTES-PYRENEES	848	1057.83	795	764.83	650	645	648	125	73	22	848.83	22	22	68.5	11	6	17	9	22	15	9	10	5	10	4	11	7	2	323	333	304	290	263	226	177	26	23	27	22	25	28	23	3.41%	1.80%	5.59%	3.10%	8.37%	6.64%	5.08%	38.46%	21.74%	37.04%	18.18%	44.00%	25.00%	8.70%
+66 PYRENEES-ORIENTALES	387	521	632	604.83	466.67	427	212	22	222	142	107	22	125	48	33	22	19	22	33	29	36	20	12	8	11	13	11	8	462	486	491	453	409	335	278	23	14	10	13	15	13	11	7.14%	4.53%	3.87%	4.86%	8.07%	8.66%	12.95%	86.96%	85.71%	80.00%	84.62%	86.67%	84.62%	72.73%
+67 BAS-RHIN	743	707	750.33	750	750	693	714	22	22	22	22	22	22	24	25	29	30	27	27	31	33	31	29	30	24	21	21	23	317	329	343	321	286	251	229	54	69	51	48	43	41	47	7.89%	8.81%	8.75%	8.41%	9.44%	12.35%	14.41%	57.41%	42.03%	58.82%	50.00%	48.84%	51.22%	48.94%
+68 HAUT-RHIN	22	22	22	22	22	22	22	83	22	22	33	750	348.17	45	33	33	26	37	22	25	26	36	35	29	39	29	32	34	113	121	138	130	113	88	86	187	206	207	209	174	180	163	29.20%	27.27%	18.84%	28.46%	19.47%	28.41%	30.23%	19.25%	16.99%	14.01%	18.66%	16.67%	17.78%	20.86%
+69 RHONE	22	22	22	22	22	22	22	302	22	39	44	319.33	26	22	129	116	125	116	106	111	107	134	117	126	119	111	132	122	589	602	555	521	433	368	292	513	570	619	549	531	560	542	21.90%	19.27%	22.52%	22.26%	24.48%	30.16%	36.64%	26.12%	20.53%	20.36%	21.68%	20.90%	23.57%	22.51%
+70 HAUTE-SAONE	22	26	0	37	26	230	514	322	22	45	30	22	37	28.17	9	12	8	15	12	12	15	10	11	10	15	13	12	15	61	59	64	58	38	38	42	31	34	22	28	26	22	19	14.75%	20.34%	12.50%	25.86%	31.58%	31.58%	35.71%	32.26%	32.35%	45.45%	53.57%	50.00%	54.55%	78.95%
+71 SAONE-ET-LOIRE	377	598	527	584	609	536	404	22	60	22	68	22	22	22	23	17	25	15	27	25	17	26	20	27	19	27	24	18	149	187	166	159	138	127	99	72	60	64	53	48	45	46	15.44%	9.09%	15.06%	9.43%	19.57%	19.69%	17.17%	36.11%	33.33%	42.19%	35.85%	56.25%	53.33%	39.13%
+72 SARTHE	195	532	535	213	22	45	660	22	22	26	22	33	99	33	30	22	26	37	27	30	19	43	22	26	31	20	26	22	181	198	192	189	168	172	140	184	163	149	143	126	115	111	16.57%	11.11%	13.54%	19.58%	16.07%	17.44%	13.57%	23.37%	13.50%	17.45%	21.68%	15.87%	22.61%	19.82%
+73 SAVOIE	589	743	750.17	819	768	720	842	22	22	39	22	22	55	30	27	26	19	16	25	28	13	13	21	18	15	21	15	10	324	402	389	359	337	322	222	20	27	30	26	27	19	14	8.33%	6.47%	4.88%	4.46%	7.42%	8.70%	5.86%	65.00%	77.78%	60.00%	57.69%	77.78%	78.95%	71.43%
+74 HAUTE SAVOIE	22	123	41	81	22	39	60	457	22	22	22	22	22	22	58	72	83	75	44	81	61	47	68	59	61	40	74	42	289	394	377	379	319	317	235	169	224	230	239	222	225	171	20.07%	18.27%	22.02%	19.79%	13.79%	25.55%	25.96%	27.81%	30.36%	25.65%	25.52%	18.02%	32.89%	24.56%
+75 PARIS	22	22	22	22	22	22	22	599	741	0	1002	874.83	505	346	103	92	83	75	79	68	62	79	78	49	50	65	84	77	616	495	410	398	305	255	224	716	962	854	796	749	651	479	16.72%	18.59%	20.24%	18.84%	25.90%	26.67%	27.68%	11.03%	8.11%	5.74%	6.28%	8.68%	12.90%	16.08%
+76 SEINE MARITIME	22	37	528	523	201	617	585	523	22	22	22	22	22	22	44	60	58	41	60	41	43	27	38	35	27	38	19	25	312	348	400	355	346	313	278	118	109	107	82	96	78	84	14.10%	17.24%	14.50%	11.55%	17.34%	13.10%	15.47%	22.88%	34.86%	32.71%	32.93%	39.58%	24.36%	29.76%
+77 SEINE-ET-MARNE	22	79	35	24	22	122	22	309	332	322	402	472	612	617	107	125	104	118	97	99	94	110	116	95	98	88	65	70	701	682	675	623	517	481	425	660	727	757	792	727	646	490	15.26%	18.33%	15.41%	18.94%	18.76%	20.58%	22.12%	16.67%	15.96%	12.55%	12.37%	12.10%	10.06%	14.29%
+78 YVELINES	33	22	22	22	24	22	36	191	141	150	123	222	142	99	81	77	64	67	54	63	61	155	150	141	136	121	138	108	381	421	405	431	352	323	306	641	676	728	715	673	641	574	21.26%	18.29%	15.80%	15.55%	15.34%	19.50%	19.93%	24.18%	22.19%	19.37%	19.02%	17.98%	21.53%	18.82%
+79 DEUX-SEVRES	126.67	459	356	521	826	99.33	327	28	233	39	22	103.33	22	26	26	22	21	16	9	27	16	31	19	16	14	13	24	14	177	203	195	182	162	136	141	93	65	64	55	58	58	53	14.69%	10.84%	10.77%	8.79%	5.56%	19.85%	11.35%	33.33%	29.23%	25.00%	25.45%	22.41%	41.38%	26.42%
+80 SOMME	743	827	811	1039	0	1227	-	22	22	22	22	22	37	62	26	13	12	10	6	11	2	26	17	20	19	11	12	11	257	250	254	258	260	266	243	52	53	38	36	26	30	25	10.12%	5.20%	4.72%	3.88%	2.31%	4.14%	0.82%	50.00%	32.08%	52.63%	52.78%	42.31%	40.00%	44.00%
+81 TARN	228	272	476	463	437	480.67	474	76	46	314.67	172	79	154	79	19	19	23	20	16	20	22	17	16	14	11	5	11	12	313	300	348	306	265	213	184	25	23	18	14	11	17	28	6.07%	6.33%	6.61%	6.54%	6.04%	9.39%	11.96%	68.00%	69.57%	77.78%	78.57%	45.45%	64.71%	42.86%
+82 TARN-ET-GARONNE	22	188	112	104	22	39	80	114	128	33	103	27	41	105	36	19	26	24	22	29	33	36	16	20	16	13	20	21	274	311	310	297	266	236	193	85	56	58	52	45	51	59	13.14%	6.11%	8.39%	8.08%	8.27%	12.29%	17.10%	42.35%	28.57%	34.48%	30.77%	28.89%	39.22%	35.59%
+83 VAR	361	483	481	549	22	144	122	22	31	22	22	22	37	54	53	55	54	48	83	57	62	33	33	27	31	13	16	22	684	709	798	687	662	600	540	48	45	48	52	49	33	46	7.75%	7.76%	6.77%	6.99%	12.54%	9.50%	11.48%	68.75%	73.33%	56.25%	59.62%	26.53%	48.48%	47.83%
+84 VAUCLUSE	360	457	547	485	22	481	352	22	22	22	22	45	81	22	43	42	31	38	45	32	35	39	34	28	36	34	22	22	449	446	495	436	370	350	275	80	67	75	85	78	61	55	9.58%	9.42%	6.26%	8.72%	12.16%	9.14%	12.73%	48.75%	50.75%	37.33%	42.35%	43.59%	36.07%	40.00%
+85 VENDEE	561	459	472	796	591	457	883	35	39	780.83	45	22	30	489	33	35	31	31	23	38	15	15	17	14	25	20	19	14	580	615	654	589	545	494	414	33	27	21	31	26	26	20	5.69%	5.69%	4.74%	5.26%	4.22%	7.69%	3.62%	45.45%	62.96%	66.67%	80.65%	76.92%	73.08%	70.00%
+86 VIENNE	22	365	328	512	611	480	148	33	22	22	35	22	87	333	21	29	19	21	17	23	20	16	23	12	19	17	19	12	159	218	158	173	142	135	117	48	51	43	53	51	39	37	13.21%	13.30%	12.03%	12.14%	11.97%	17.04%	17.09%	33.33%	45.10%	27.91%	35.85%	33.33%	48.72%	32.43%
+87 HAUTE-VIENNE	383	881	816	705	377	481	525	22	338	170	172	22	22	83	19	12	12	17	22	20	14	14	11	11	11	11	12	7	180	184	178	181	163	140	115	17	12	15	14	13	13	8	10.56%	6.52%	6.74%	9.39%	13.50%	14.29%	12.17%	82.35%	91.67%	73.33%	78.57%	84.62%	92.31%	87.50%
+88 VOSGES	22	29	22	222	334	477	539	33	38	147	24	22	148	26	26	28	28	11	8	16	15	7	10	9	13	10	13	15	98	120	113	122	125	97	84	14	14	20	18	13	18	20	26.53%	23.33%	24.78%	9.02%	6.40%	16.49%	17.86%	50.00%	71.43%	45.00%	72.22%	76.92%	72.22%	75.00%
+89 YONNE	22	22	22	24	26	29	22	616.83	222	98	64	99	22	24	25	11	14	22	16	8	14	37	30	28	40	35	31	34	97	88	115	112	88	67	64	177	159	147	139	122	112	100	25.77%	12.50%	12.17%	19.64%	18.18%	11.94%	21.88%	20.90%	18.87%	19.05%	28.78%	28.69%	27.68%	34.00%
+90 TERRITOIRE DE BELFORT	22	507	660	446	337	587	279	27	26	22	30	129	28	81	11	6	7	14	6	10	7	10	8	9	14	7	10	7	62	60	74	63	63	45	38	16	13	9	17	12	14	9	17.74%	10.00%	9.46%	22.22%	9.52%	22.22%	18.42%	62.50%	61.54%	100.00%	82.35%	58.33%	71.43%	77.78%
+91 ESSONNE	22	39	39	22	29	29	28	217	159	283	263	249	151	207	63	53	43	65	50	70	44	134	126	115	130	105	119	89	286	326	335	321	261	241	181	635	735	773	761	679	611	581	22.03%	16.26%	12.84%	20.25%	19.16%	29.05%	24.31%	21.10%	17.14%	14.88%	17.08%	15.46%	19.48%	15.32%
+92 HAUTS-DE-SEINE	22	22	22	22	22	22	22	545.33	571	599	641	657	639	680	86	76	74	73	64	60	65	179	171	154	146	147	147	116	214	164	144	148	112	107	111	1128	1215	1339	1221	1140	991	826	40.19%	46.34%	51.39%	49.32%	57.14%	56.07%	58.56%	15.87%	14.07%	11.50%	11.96%	12.89%	14.83%	14.04%
+93 SEINE-SAINT-DENIS	62	29	22	36	33	22	33	441	434	471	481	485	480	634.5	36	33	37	28	36	24	33	310	317	288	247	220	208	144	40	35	41	31	36	25	38	2239	2355	2209	2005	1755	1456	1264	90.00%	94.29%	90.24%	90.32%	100.00%	96.00%	86.84%	13.85%	13.46%	13.04%	12.32%	12.54%	14.29%	11.39%
+94 VAL-DE-MARNE	28	56	22	22	26	39	41	427	457.83	487	535.83	528	195	194	71	58	62	57	49	41	45	161	153	173	185	204	253	166	348	314	295	238	199	178	177	1004	1158	1270	1207	1072	881	634	20.40%	18.47%	21.02%	23.95%	24.62%	23.03%	25.42%	16.04%	13.21%	13.62%	15.33%	19.03%	28.72%	26.18%
+95 VAL-D'OISE	22	22	22	33	527	22	48	548.33	500	528	572	612	506	476	59	59	67	56	58	40	37	112	123	127	112	118	116	95	157	167	169	141	141	111	97	829	984	1008	1045	947	803	729	37.58%	35.33%	39.64%	39.72%	41.13%	36.04%	38.14%	13.51%	12.50%	12.60%	10.72%	12.46%	14.45%	13.03%
+620 CORSE-DU-SUD	356	638	1001	500	176	406.83	603	336	45	322	37	22	22	110	9	8	7	10	10	6	6	6	7	7	9	10	4	6	106	141	131	103	99	102	91	12	10	13	14	14	12	16	8.49%	5.67%	5.34%	9.71%	10.10%	5.88%	6.59%	50.00%	70.00%	53.85%	64.29%	71.43%	33.33%	37.50%
+720 HAUTE-CORSE	293	903	880.5	673	522	0	606.83	28	-	28	302	22	0	26	6	4	6	6	6	1	6	4	3	6	5	2	1	6	89	108	109	90	91	89	66	4	4	6	6	2	2	6	6.74%	3.70%	5.50%	6.67%	6.59%	1.12%	9.09%	100.00%	75.00%	100.00%	83.33%	100.00%	50.00%	100.00%
+971 GUADELOUPE	66.67	138	151	169	157	171	622	22	40.5	24	22	22	29	32	70	68	61	47	45	53	39	36	30	42	30	39	40	28	329	377	335	288	303	261	239	53	41	53	44	58	53	44	21.28%	18.04%	18.21%	16.32%	14.85%	20.31%	16.32%	67.92%	73.17%	79.25%	68.18%	67.24%	75.47%	63.64%
+972 MARTINIQUE	636	646	683	699	730	732	682	22	22	22.67	22	43	22	43	29	46	47	34	20	35	43	31	29	37	28	20	25	25	337	336	345	305	308	249	235	52	48	55	44	34	33	34	8.61%	13.69%	13.62%	11.15%	6.49%	14.06%	18.30%	59.62%	60.42%	67.27%	63.64%	58.82%	75.76%	73.53%
+973 GUYANE	22	35	36	30	58	28	22	855	754	756	751	753	727	739	33	42	35	45	37	39	51	29	39	33	42	38	45	44	66	62	61	64	51	46	59	229	264	250	278	236	219	181	50.00%	67.74%	57.38%	70.31%	72.55%	84.78%	86.44%	12.66%	14.77%	13.20%	15.11%	16.10%	20.55%	24.31%
+974 LA REUNION	622	622	629	632	627	627	627	22	22	22	22	22	33	29	84	87	72	74	63	62	66	56	47	44	43	37	35	41	586	622	574	524	572	550	515	64	56	54	52	45	40	46	14.33%	13.99%	12.54%	14.12%	11.01%	11.27%	12.82%	87.50%	83.93%	81.48%	82.69%	82.22%	87.50%	89.13%
+976 MAYOTTE	22	22	22	22	22	29	22	125	156	22	0	1702	1120.17	1553	48	41	28	34	26	28	27	53	46	40	42	37	39	33	107	81	57	54	41	32	35	84	119	110	117	180	206	203	44.86%	50.62%	49.12%	62.96%	63.41%	87.50%	77.14%	63.10%	38.66%	36.36%	35.90%	20.56%	18.93%	16.26%
+  </script>
+
+		<script>
+			(function () {
+      const RAW = document.getElementById('csv-data').textContent.trim();
+      const SEP = /\t|;|,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
+      const lines = RAW.split(/\r?\n/).filter(Boolean);
+
+      const header = lines.shift().split(/\t/).map(h => h.trim());
+
+      const years = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+      const col = { entrant: {}, sortant: {}, candEnt: {}, candSort: {}, tauxEnt: {}, tauxSort: {}, baremeEnt: {}, baremeSort: {} };
+
+      years.forEach(y => {
+        col.baremeEnt[y] = header.findIndex(h => h.includes(`Barème ${y} du dernier entrant`));
+        col.baremeSort[y] = header.findIndex(h => h.includes(`Barème ${y} du dernier sortant`));
+        col.entrant[y] = header.findIndex(h => h.includes(`Nombre d'entrants ${y}`));
+        col.sortant[y] = header.findIndex(h => h.includes(`Nombre de sortants ${y}`));
+        col.candEnt[y] = header.findIndex(h => h.includes(`Nombre de candidats ${y} à l'entrée`) || h.includes(`Nombre de candidats à l'entrée ${y}`));
+        col.candSort[y] = header.findIndex(h => h.includes(`Nombre de candidats ${y} à la sortie`) || h.includes(`Nombre de candidats à la sortie ${y}`));
+        col.tauxEnt[y] = header.findIndex(h => h.includes(`Taux de satisfaction ${y} à l'entrée`) || h.includes(`Taux de satisfaction à l'entrée ${y}`));
+        col.tauxSort[y] = header.findIndex(h => h.includes(`Taux de satisfaction ${y} à la sortie`) || h.includes(`Taux de satisfaction à la sortie ${y}`));
+      });
+
+      function toPctNum(s) {
+        if (s == null) return null;
+        const raw = String(s).trim();
+        if (!raw || raw === '-') return null;
+        const cleaned = raw.replace(/%/g, '').replace(/\s/g, '').replace(',', '.');
+        const n = Number(cleaned);
+        return Number.isFinite(n) ? n : null;
+      }
+
+      function toNum(s) {
+        if (s == null) return null;
+        const raw = String(s).trim();
+        if (!raw || raw === '-') return null;
+        const n = Number(raw.replace(/\s/g, '').replace(',', '.'));
+        return Number.isFinite(n) ? n : null;
+      }
+
+      const DATA = {};
+      lines.forEach(line => {
+        const cells = line.split(/\t/).map(x => x.trim());
+        const depRaw = cells[0] || "";
+        if (!depRaw) return;
+
+        const m = depRaw.match(/^(\S+)\s+(.*)$/);
+        const code = m ? m[1] : depRaw;
+        const name = m ? m[2] : depRaw;
+
+        const entree = {}, sortie = {};
+        years.forEach(y => {
+          entree[y] = {
+            bareme: toNum(cells[col.baremeEnt[y]]),
+            entrants: toNum(cells[col.entrant[y]]),
+            candidats: toNum(cells[col.candEnt[y]]),
+            taux: toPctNum(cells[col.tauxEnt[y]])
+          };
+          sortie[y] = {
+            bareme: toNum(cells[col.baremeSort[y]]),
+            sortants: toNum(cells[col.sortant[y]]),
+            candidats: toNum(cells[col.candSort[y]]),
+            taux: toPctNum(cells[col.tauxSort[y]])
+          };
+        });
+
+        DATA[code] = { name, entree, sortie };
+      });
+
+      const WRAP = document.getElementById('seunsa-visualiseur');
+      const elSearchOrigin = WRAP.querySelector('#search-origin');
+      const elSearchTargets = Array.from(WRAP.querySelectorAll('.search-target'));
+      const elCount = WRAP.querySelector('#seu-count');
+      const datalist = WRAP.querySelector('#dep-list');
+      const btnShow = WRAP.querySelector('#seu-show');
+      const btnReset = WRAP.querySelector('#seu-reset');
+      const btnExportPdf = WRAP.querySelector('#seu-export-pdf');
+      const originBlock = WRAP.querySelector('#seu-origin-block');
+      const originTitle = WRAP.querySelector('#seu-origin-title');
+      const originTable = WRAP.querySelector('#seu-origin-table');
+      const targetsBlock = WRAP.querySelector('#seu-targets-block');
+      const targetsWrap = WRAP.querySelector('#seu-targets-container');
+
+      const entries = Object.entries(DATA).sort((a, b) => a[0].localeCompare(b[0]));
+      datalist.innerHTML = entries.map(([code, obj]) => `<option value="${code} — ${obj.name}"></option>`).join("");
+
+      const normalize = s => (s || "").toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
+      function resolveToCode(input) {
+        const raw = (input || "").trim();
+        if (!raw) return "";
+        const m1 = raw.match(/^\s*([0-9]{2,3}|20[ABab])\s*$/);
+        if (m1) return m1[1].toUpperCase();
+        const m2 = raw.match(/^\s*(20[ABab]|[0-9]{2,3})\s*[-–—]/);
+        if (m2) return m2[1].toUpperCase();
+        const m3 = raw.match(/\((20[ABab]|[0-9]{2,3})\)\s*$/);
+        if (m3) return m3[1].toUpperCase();
+        const n = normalize(raw);
+        for (const [c, o] of entries) {
+          if (normalize(o.name).startsWith(n)) return c;
+        }
+        for (const [c, o] of entries) {
+          if (normalize(o.name).includes(n)) return c;
+        }
+        return "";
+      }
+
+      function uniqueTargets() {
+        const seen = new Set(), out = [];
+        elSearchTargets.map(i => resolveToCode(i.value)).filter(Boolean).forEach(c => {
+          if (!seen.has(c) && out.length < 6) {
+            seen.add(c);
+            out.push(c);
+          }
+        });
+        return out;
+      }
+
+      function updateCount() {
+        elCount.textContent = `${uniqueTargets().length}/6`;
+      }
+
+      elSearchTargets.forEach(i => i.addEventListener('input', updateCount));
+      updateCount();
+
+      btnReset.addEventListener('click', () => {
+        elSearchOrigin.value = "";
+        elSearchTargets.forEach(i => i.value = "");
+        originBlock.style.display = 'none';
+        targetsBlock.style.display = 'none';
+        updateCount();
+      });
+
+      btnShow.addEventListener('click', () => {
+        const code = resolveToCode(elSearchOrigin.value);
+        if (!code) {
+          alert("Choisis un département d’origine (n° ou nom).");
+          return;
+        }
+        renderOrigin(code);
+        renderTargets(uniqueTargets());
+      });
+
+      btnExportPdf.addEventListener('click', () => {
+        const code = resolveToCode(elSearchOrigin.value);
+        if (!code) {
+          alert("Choisis d’abord un département d’origine puis clique sur Afficher.");
+          return;
+        }
+
+        renderOrigin(code);
+        renderTargets(uniqueTargets());
+
+        const popup = window.open('', '_blank');
+        if (!popup) {
+          alert("Le navigateur a bloqué la fenêtre d’impression. Autorise les fenêtres contextuelles pour cette page puis réessaie.");
+          return;
+        }
+
+        const originHtml = originBlock.outerHTML;
+        const targetsHtml = targetsBlock.outerHTML;
+        const originName = DATA[code]?.name || code;
+        const targetCodes = uniqueTargets();
+        const targetNames = targetCodes.map(c => DATA[c]?.name || c);
+        const targetsLabel = targetNames.length ? targetNames.join(" · ") : "Aucun département visé sélectionné";
+        const targetCount = targetCodes.length;
+
+        popup.document.open();
+        popup.document.write(`<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SE-Unsa 71 - Simulation mouvement interdépartemental</title>
+<style>
+  :root { --bleu:#007BA5; --orange:#EB6209; --gris:#B2B2B2; --rouge:#c0392b; }
+  @page { size: A4 landscape; margin: 5mm; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#fff; font-family:Arial,Helvetica,sans-serif; color:#111; }
+  body { margin:0; min-height:100vh; overflow:auto; background:#f3f5f7; }
+  .toolbar { display:flex; justify-content:center; align-items:center; padding:14px; border-bottom:1px solid #ddd; background:#fff; position:sticky; top:0; z-index:20; }
+  .toolbar button { border:0; border-radius:999px; padding:11px 18px; background:#007BA5; color:#fff; font-weight:700; font-size:14px; cursor:pointer; }
+  #print-area { transform-origin: top left; width:287mm; margin:18px auto; padding:7mm; background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.12); }
+  .pdf-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; border-bottom:2px solid #007BA5; padding:0 0 5px; margin-bottom:5px; }
+  .pdf-head h1 { margin:0; font-size:18px; color:#007BA5; }
+  .pdf-head .sub { margin-top:4px; font-size:11px; line-height:1.35; }
+  .pdf-head .badge { display:inline-block; background:#EB6209; color:#fff; padding:3px 7px; border-radius:999px; font-size:8px; font-weight:700; }
+  .block { border:1px solid #ddd; border-radius:7px; margin-bottom:5px; overflow:hidden; }
+  .title { color:#fff; padding:5px 7px; font-size:9px; font-weight:700; }
+  .title.origin { background:#007BA5; }
+  .title.targets { background:#EB6209; }
+  .grid-targets { display:grid; grid-template-columns:1fr; gap:6px; padding:5px; }
+  body.targets-4 .grid-targets, body.targets-5 .grid-targets, body.targets-6 .grid-targets { grid-template-columns:1fr 1fr; }
+  .subheader { padding:5px 6px; font-size:9px; font-weight:700; border-top:2px solid rgba(235,98,9,.35); }
+  .scroll-x { overflow:visible !important; }
+  table { width:100%; border-collapse:collapse; table-layout:fixed; min-width:0 !important; }
+  th, td { border:1px solid #ddd; padding:3px 3px; font-size:8px; line-height:1.12; text-align:center; white-space:nowrap; }
+  th:first-child, td:first-child { width:27%; text-align:left; white-space:normal; font-weight:700; position:static !important; }
+  th.sl, td.sl { width:15%; }
+  thead th { background:#eef4f7; font-weight:700; position:static !important; }
+  tr.row-bold td:not(:first-child){font-weight:700}
+  tr.row-red td:not(:first-child){color:#c0392b;font-weight:700}
+  tr.row-satisf-origin td:not(:first-child){color:#EB6209;font-weight:700}
+  tr.row-satisf-target td:not(:first-child){color:#007BA5;font-weight:700}
+  svg { max-width:58px; height:16px; vertical-align:middle; }
+  .trend { font-size:7px; margin-left:1px; }
+  .pdf-note { margin-top:5px; padding:5px 7px; background:#fff7ef; border-left:3px solid #EB6209; font-size:8.2px; line-height:1.3; }
+  .contact-title { margin-top:6px; font-size:9px; font-weight:700; }
+  .pdf-contacts { margin-top:3px; border-top:1px solid #bbb; padding-top:4px; display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:8.2px; line-height:1.3; }
+  .pdf-contacts strong { color:#007BA5; }
+  #seu-origin-block, #seu-targets-block { display:block !important; }
+  @media print {
+    .toolbar { display:none !important; }
+    html, body { width:287mm; height:200mm; background:#fff; overflow:hidden; }
+    #print-area { margin:0; padding:0; box-shadow:none; page-break-inside:avoid; break-inside:avoid; }
+  }
+</style>
+</head>
+<body class="targets-${targetCount}">
+<div class="toolbar"><button onclick="window.print()">📄 Imprimer / Enregistrer en PDF</button></div>
+<div id="print-area">
+  <div class="pdf-head">
+    <div><h1>SE-Unsa 71 - Mouvement interdépartemental 1er degré</h1><div class="sub"><strong>Résultats des mouvements interdépartementaux de 2020 à 2026</strong><br>Département d’origine : <strong>${originName}</strong><br>Département${targetCount > 1 ? "s" : ""} visé${targetCount > 1 ? "s" : ""} : <strong>${targetsLabel}</strong></div></div>
+    <div class="badge">Réservé aux adhérents</div>
+  </div>
+  ${originHtml}
+  ${targetsHtml}
+  <div class="pdf-note"><strong>Attention :</strong> ces données correspondent aux mouvements précédents. Elles servent à comprendre les barèmes et flux observés et ne constituent pas une prévision du résultat d’un futur mouvement.</div>
+  <div class="contact-title">Une question sur votre situation ou votre projet de mutation ? Contactez le SE-Unsa 71 :</div>
+  <div class="pdf-contacts">
+    <div><strong>Maud</strong><br>71@se-unsa.org - 07 81 89 10 48</div>
+    <div><strong>Guillaume</strong><br>entree_metier.71@se-unsa.org - 07 69 65 24 23</div>
+  </div>
+</div>
+<script>
+(function(){
+  function fitOnePage(){
+    const area=document.getElementById('print-area');
+    area.style.transform='none';
+    area.style.width='287mm';
+    const maxW=document.body.clientWidth;
+    const maxH=Math.floor((200/25.4)*96);
+    const scale=Math.min(1, maxW/area.scrollWidth, maxH/area.scrollHeight);
+    area.style.transform='scale('+scale+')';
+    area.style.width=(100/scale)+'%';
+  }
+  window.addEventListener('beforeprint', fitOnePage);
+  window.addEventListener('afterprint',()=>{
+    const area=document.getElementById('print-area');
+    area.style.transform='none';
+    area.style.width='287mm';
+  });
+})();
+<\/script>
+</body></html>`);
+        popup.document.close();
+      });
+
+      const YEARS = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+
+      function sparkline(arr, fixedColor) {
+        const values = arr.map(v => v == null ? null : Number(String(v).replace(",", ".")));
+        const nums = values.filter(v => Number.isFinite(v));
+        if (!nums.length) return "";
+        const w = 140, h = 28, pad = 3;
+        const min = Math.min(...nums);
+        const max = Math.max(...nums);
+        const first = nums[0];
+        const last = nums[nums.length - 1];
+        const maxAbs = Math.max(...nums.map(v => Math.abs(v)));
+        const visRange = Math.max(max - min, maxAbs * 0.20, 1e-6);
+        const minVis = max - visRange;
+        const pts = [];
+        values.forEach((v, i) => {
+          if (!Number.isFinite(v)) return;
+          const x = pad + (i / (values.length - 1)) * (w - 2 * pad);
+          const y = h - pad - ((v - minVis) / visRange) * (h - 2 * pad);
+          pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+        });
+        const relChange = (last - first) / (Math.abs(first) || 1);
+        const absChange = Math.abs(last - first);
+        const deadband = (Math.abs(relChange) < 0.10) || (absChange < maxAbs * 0.05);
+        const cls = deadband ? "flat" : (last > first ? "up" : "down");
+        const arrow = cls === "up" ? "▲" : (cls === "down" ? "▼" : "▬");
+        const stroke = fixedColor || "#999";
+        return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts.join(' ')}" fill="none" stroke="${stroke}" stroke-width="2" /></svg><span class="trend ${cls}" style="color:${stroke}">${arrow}</span>`;
+      }
+
+      function id(v) { return v; }
+
+      function fmtPct(v) {
+        if (v == null || v === "") return "";
+        const n = typeof v === 'number' ? v : Number(String(v).replace(",", "."));
+        return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 }).format(n) + " %";
+      }
+
+      function fmtPts(v) {
+        if (v == null || v === "") return "";
+        const n = Number(String(v).replace(",", "."));
+        const isInt = Number.isInteger(n);
+        return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: isInt ? 0 : 2 }).format(n) + " pts";
+      }
+
+      function rowHTML(label, key, src, obj, fmt, cls, color) {
+        const vals = YEARS.map(y => obj[src]?.[y]?.[key] ?? null);
+        const cells = vals.map(v => `<td style="text-align:center">${v != null ? fmt(v) : ""}</td>`).join("");
+        return `<tr class="${cls || ""}"><td class="rowlabel">${label}</td>${cells}<td class="sl">${sparkline(vals, color)}</td></tr>`;
+      }
+
+      function renderOrigin(code) {
+        const o = DATA[code];
+        originTitle.textContent = `Informations sur le département d’origine : ${o?.name || code}`;
+        originTable.innerHTML = "";
+        const thead = document.createElement('thead');
+        thead.innerHTML = `<tr><th style="text-align:left">Indicateurs</th>${YEARS.map(y => `<th>${y}</th>`).join("")}<th class="sl">Tendance</th></tr>`;
+        originTable.appendChild(thead);
+
+        const rows = [
+          { label: "Barème du dernier sortant (pts)", key: "bareme", src: "sortie", cls: "", fmt: fmtPts, color: "var(--gris)" },
+          { label: "Nombre de sortants", key: "sortants", src: "sortie", cls: "row-bold", fmt: id, color: "#111" },
+          { label: "Nombre de candidats à la sortie", key: "candidats", src: "sortie", cls: "row-red", fmt: id, color: "var(--rouge)" },
+          { label: "Taux de satisfaction en sortie", key: "taux", src: "sortie", cls: "row-satisf-origin", fmt: fmtPct, color: "var(--orange)" }
+        ];
+
+        const tbody = document.createElement('tbody');
+        rows.forEach(r => {
+          const vals = YEARS.map(y => o[r.src]?.[y]?.[r.key] ?? null);
+          const tr = document.createElement('tr');
+          if (r.cls) tr.className = r.cls;
+          tr.innerHTML = `<td class="rowlabel">${r.label}</td>${vals.map(v => `<td style="text-align:center">${v != null ? r.fmt(v) : ""}</td>`).join("")}<td class="sl">${sparkline(vals, r.color)}</td>`;
+          tbody.appendChild(tr);
+        });
+        originTable.appendChild(tbody);
+        originBlock.style.display = 'block';
+      }
+
+      function renderTargets(codes) {
+        targetsWrap.innerHTML = "";
+        targetsBlock.style.display = 'block';
+
+        if (!codes.length) {
+          targetsWrap.innerHTML = `<div class="panel" style="margin:12px">Ajoute 1 à 6 départements visés.</div>`;
+          return;
+        }
+
+        codes.forEach(code => {
+          const o = DATA[code];
+          const card = document.createElement('div');
+          card.innerHTML = `
+            <div class="subheader">${o?.name || code}</div>
+            <div class="scroll-x">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="text-align:left">Indicateurs</th>
+                    ${YEARS.map(y => `<th>${y}</th>`).join("")}
+                    <th class="sl">Tendance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowHTML("Barème du dernier entrant (pts)", "bareme", "entree", o, fmtPts, "", "var(--gris)")}
+                  ${rowHTML("Nombre d'entrants", "entrants", "entree", o, id, "row-bold", "#111")}
+                  ${rowHTML("Nombre de candidats à l'entrée", "candidats", "entree", o, id, "row-red", "var(--rouge)")}
+                  ${rowHTML("Taux de satisfaction en entrée", "taux", "entree", o, fmtPct, "row-satisf-target", "var(--bleu)")}
+                </tbody>
+              </table>
+            </div>`;
+          targetsWrap.appendChild(card);
+        });
+      }
+    })();
+		</script>
+	</div>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
+}
+</script>
+</body>
+</html>

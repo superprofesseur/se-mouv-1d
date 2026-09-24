@@ -295,6 +295,106 @@
 			background: #fff8ea;
 		}
 
+
+		/* ===== CORRECTIF MOBILE / APPLICATION =====
+		   La page reste fixe en largeur ; seul le tableau defile horizontalement.
+		   La premiere colonne (Indicateurs) reste visible pendant le defilement. */
+		*, *::before, *::after {
+			box-sizing: border-box;
+		}
+
+		html, body {
+			width: 100%;
+			max-width: 100%;
+			margin: 0;
+			overflow-x: hidden;
+		}
+
+		#seunsa-visualiseur,
+		#seunsa-visualiseur .wrap,
+		#seunsa-visualiseur .panel,
+		#seunsa-visualiseur .block,
+		#seunsa-visualiseur .grid-targets,
+		#seunsa-visualiseur .grid-targets > div {
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+		}
+
+		#seunsa-visualiseur .scroll-x {
+			display: block;
+			position: relative;
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+			overflow-x: auto;
+			overflow-y: visible;
+			-webkit-overflow-scrolling: touch;
+			overscroll-behavior-x: contain;
+			touch-action: pan-x pan-y;
+		}
+
+		#seunsa-visualiseur .scroll-x table {
+			width: max-content;
+			min-width: 1080px;
+			max-width: none;
+		}
+
+		#seunsa-visualiseur thead th:first-child,
+		#seunsa-visualiseur tbody td:first-child {
+			position: -webkit-sticky;
+			position: sticky;
+			left: 0;
+			z-index: 4;
+			width: 235px;
+			min-width: 235px;
+			max-width: 235px;
+			white-space: normal;
+			box-shadow: 3px 0 4px rgba(0,0,0,.10);
+		}
+
+		#seunsa-visualiseur thead th:first-child {
+			z-index: 7;
+			background: var(--thead);
+		}
+
+		#seunsa-visualiseur tbody tr:nth-child(odd) td:first-child {
+			background: var(--odd);
+		}
+
+		#seunsa-visualiseur tbody tr:nth-child(even) td:first-child {
+			background: #fff;
+		}
+
+		#seunsa-visualiseur tbody tr:hover td:first-child {
+			background: #fff8ea;
+		}
+
+		@media (max-width: 700px) {
+			#seunsa-visualiseur .wrap {
+				gap: 12px;
+			}
+
+			#seunsa-visualiseur .panel {
+				padding: 10px;
+			}
+
+			#seunsa-visualiseur thead th:first-child,
+			#seunsa-visualiseur tbody td:first-child {
+				width: 178px;
+				min-width: 178px;
+				max-width: 178px;
+				font-size: .84rem;
+				line-height: 1.2;
+			}
+
+			#seunsa-visualiseur th,
+			#seunsa-visualiseur td {
+				padding: 8px 8px;
+				font-size: .88rem;
+			}
+		}
+
 	</style>
 
 	<div class="wrap">
